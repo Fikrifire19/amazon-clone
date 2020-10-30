@@ -1,17 +1,35 @@
 import React, { useState } from 'react'
 import './Login.css'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import { auth } from './firebase';
 
 function Login() {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const history = useHistory();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     
     const signIn = e => {
-        e.preventDefault()
+        e.preventDefault();
+
+        auth
+        .signInWithEmailAndPassword(email, password)
+        .then(auth => {
+            history.push('/')
+        })
+        .catch(error => alert(error.message))
     }
 
     const signUp = e => {
-        e.preventDefault()
+        e.preventDefault();
+
+        auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((auth) => {  
+            if (auth) {
+                history.push('/')
+            }
+        })
+        .catch(error => alert(error.message))
     }
 
     return (
@@ -24,10 +42,10 @@ function Login() {
 
                 <form>
                     <h5>E-mail</h5>
-                    <input type='text' value={email} onClick={e => setEmail(e.target.value)} />
+                    <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
                     <h5>Password</h5>
-                    <input type='password' value={password} onClick={e => setPassword(e.target.value)} />
-                    <button type="submit" onClick={signIn} className='login-signInButton'>Sign In</button>
+                    <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                    <button type='submit' onClick={signIn} className='login-signInButton'>Sign In</button>
                 </form>
                 <p>
                 By continuing, you agree to Amazon's Conditions of Use and Privacy Notice.
