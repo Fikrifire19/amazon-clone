@@ -37,7 +37,7 @@ function Header() {
                         </span>
                     </div>
                 </Link>
-                <Link to="/payment">
+                <Link to="/orders">
                     <div className="header-option">
                         <span className="header-optionLineOne">
                             Returns

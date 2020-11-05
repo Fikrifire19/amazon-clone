@@ -9,6 +9,7 @@ import CheckoutProduct from './CheckoutProduct';
 import { getCartTotal } from "./reducer";
 
 import './Payment.css'
+import { db } from './firebase';
 
 function Payment() {
     const [{cart, user}, dispatch] = useStateValue();
@@ -47,6 +48,17 @@ function Payment() {
             }
         })
         .then(({paymentIntent}) => {
+            db
+              .collection('users')
+              .doc(user?.uid)
+              .collection('orders')
+              .doc(paymentIntent.id)
+              .set({
+                  cart: cart,
+                  amount: paymentIntent.amount,
+                  created: paymentIntent.created
+              })
+
             setSucceeded(true);
             setError(null);
             setProcessing(false);
